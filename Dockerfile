@@ -9,7 +9,7 @@ RUN sudo apt-get update && \
     rm -r /tmp/ruby-install-* && \
     sudo rm -rf /var/lib/apt/lists/*
     
-RUN npm install -g cordova@10.0.0 @ionic/cli@6.1.0
+RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@10.0.0 @ionic/cli@6.1.0
 
 USER node
 WORKDIR /home/circleci
