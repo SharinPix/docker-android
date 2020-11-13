@@ -8,3 +8,6 @@ RUN sudo apt-get update && \
     ruby-install --cleanup ruby 2.6.3 && \
     rm -r /tmp/ruby-install-* && \
     sudo rm -rf /var/lib/apt/lists/*
+
+USER node
+WORKDIR /home/circleci
