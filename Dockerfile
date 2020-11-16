@@ -8,6 +8,11 @@ RUN sudo apt-get update && \
     ruby-install --cleanup ruby 2.6.3 && \
     rm -r /tmp/ruby-install-* && \
     sudo rm -rf /var/lib/apt/lists/*
+
+RUN echo 'PATH=/home/circleci/.rubies/ruby-2.6.3/bin' >> $BASH_ENV && \
+    source /home/circleci/.bashrc
+
+RUN sudo apt-get update && sudo apt-get install git
     
 RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@10.0.0 @ionic/cli@6.1.0
 
