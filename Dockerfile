@@ -84,24 +84,22 @@ RUN DOCKERIZE_URL="https://circle-downloads.s3.amazonaws.com/circleci-images/cac
   && rm -rf /tmp/dockerize-linux-amd64.tar.gz \
   && dockerize --version
 
-RUN groupadd --gid 3434 circleci \
-  && useradd --uid 3434 --gid circleci --shell /bin/bash --create-home circleci \
-  && echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci \
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
+  && echo 'node ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
 # BEGIN IMAGE CUSTOMIZATIONS
 # END IMAGE CUSTOMIZATIONS
 
-USER circleci
-ENV PATH /home/circleci/.local/bin:/home/circleci/bin:${PATH}
+USER node
+ENV PATH /home/node/.local/bin:/home/node/bin:${PATH}
 
 CMD ["/bin/sh"]
 
 
-# Now commands run as user `circleci`
-
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
-ENV HOME /home/circleci
+ENV HOME /home/node
 
 # Install Google Cloud SDK
 
@@ -154,7 +152,7 @@ RUN echo 'gem: --env-shebang --no-rdoc --no-ri' >> ~/.gemrc && gem install bundl
 
 # Download and install Android Commandline Tools
 RUN sudo mkdir -p ${android_home}/cmdline-tools && \
-    sudo chown -R circleci:circleci ${android_home} && \
+    sudo chown -R node:node ${android_home} && \
     wget -O /tmp/cmdline-tools.zip -t 5 "${cmdline_tools}" && \
     unzip -q /tmp/cmdline-tools.zip -d ${android_home}/cmdline-tools && \
     rm /tmp/cmdline-tools.zip
@@ -198,9 +196,6 @@ RUN sdkmanager "platforms;android-29"
 # node installations command expect to run as root
 USER root
 ## Using node installation from https://raw.githubusercontent.com/nodejs/docker-node/c2604466d06ba562fd9040d18c57af16545c6a5b/14/stretch/Dockerfile
-
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ENV NODE_VERSION 14.15.0
 
@@ -265,12 +260,11 @@ RUN set -ex \
   # smoke test
   && yarn --version
 
-USER circleci
+USER node
 
 RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@10.0.0 @ionic/cli@6.1.0
 RUN sudo apt-get update && sudo apt-get install gradle
 
 RUN sudo apt-get update -qqy && sudo apt-get install -qqy gradle && sudo rm -rf /var/lib/apt/lists/*
 
-USER node
-WORKDIR /home/circleci
+WORKDIR /home/node
