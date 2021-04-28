@@ -147,7 +147,7 @@ RUN sudo apt-get update && \
     rm -r /tmp/ruby-install-* && \
     sudo rm -rf /var/lib/apt/lists/*
 
-ENV PATH ${HOME}/.rubies/ruby-2.6.3/bin:${PATH}
+ENV PATH ${HOME}/.rubies/ruby-2.7.2/bin:${PATH}
 RUN echo 'gem: --env-shebang --no-rdoc --no-ri' >> ~/.gemrc && gem install bundler -v 2.1.4
 
 # Download and install Android Commandline Tools
