@@ -1,5 +1,5 @@
 
-FROM openjdk:8-jdk-slim
+FROM openjdk:11-jdk-slim
 
 # Initial Command run as `root`.
 
@@ -185,13 +185,13 @@ RUN sdkmanager \
   # "build-tools;29.0.0" \
   # "build-tools;29.0.1" \
   # "build-tools;29.0.2" \
-  "build-tools;29.0.3"
+  # "build-tools;29.0.3"
   # "build-tools;30.0.0" \
   # "build-tools;30.0.1" \
-  # "build-tools;30.0.2"
+  "build-tools;30.0.2"
 
 # API_LEVEL string gets replaced by m4
-RUN sdkmanager "platforms;android-29"
+RUN sdkmanager "platforms;android-31"
 
 # node installations command expect to run as root
 USER root
