@@ -36,7 +36,7 @@ RUN apt-get update \
   && mkdir -p /usr/share/man/man1 \
   && apt-get install -y \
     git xvfb apt \
-    locales sudo openssh-client ca-certificates tar gzip parallel \
+    locales sudo openssh-client ca-certificates tar gzip \
     net-tools netcat unzip zip bzip2 gnupg curl wget make
 
 
