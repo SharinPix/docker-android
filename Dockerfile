@@ -64,11 +64,10 @@ RUN set -ex \
   && DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/${DOCKER_VERSION}" \
   && echo Docker URL: $DOCKER_URL \
   && curl --silent --show-error --location --fail --retry 3 --output /tmp/docker.tgz "${DOCKER_URL}" \
-  && chmod 755 /tmp/docker.tgz \
-  && ls -lha /tmp/docker.tgz \
-  && tar -xz -C /tmp -f /tmp/docker.tgz \
-  && mv /tmp/docker/* /usr/bin \
-  && rm -rf /tmp/docker /tmp/docker.tgz \
+  && sudo ls -lha /tmp/docker.tgz \
+  && sudo tar -xz -C /tmp -f /tmp/docker.tgz \
+  && sudo mv /tmp/docker/* /usr/bin \
+  && sudo rm -rf /tmp/docker /tmp/docker.tgz \
   && which docker \
   && (docker version || true)
 
