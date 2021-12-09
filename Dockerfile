@@ -17,4 +17,10 @@ ENV HOME /home/node
 
 RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@10.0.0 @ionic/cli@6.1.0
 
+RUN bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
+  bash -c "rbenv install 2.7.2" && \
+  echo 'eval "$(rbenv init -)"' >> /home/user/.bashrc && \
+  bash -c "rbenv global 2.7.2" && \
+  bash -c "/home/node/.rbenv/shims/gem install bundler"
+
 WORKDIR /home/node
