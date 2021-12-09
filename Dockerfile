@@ -1,7 +1,7 @@
 FROM cimg/android:2021.10.2-node
 
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
+RUN sudo groupadd --gid 1000 node \
+  && sudo useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
   && echo 'node ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
