@@ -45,8 +45,11 @@ jobs:
             if [ "$ {CIRCLE_BRANCH}" == "master" ]; then
               docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
               docker push $IMAGE_NAME:latest
+              docker push $IMAGE_NAME:$IMAGE_TAG
+            else
+              docker tag $IMAGE_NAME:$IMAGE_TAG
+              docker push $IMAGE_NAME:$IMAGE_TAG
             fi
-            docker push $IMAGE_NAME:$IMAGE_TAG
 workflows:
   version: 2
   build-and-publish:
