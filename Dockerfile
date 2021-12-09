@@ -28,6 +28,8 @@ RUN if grep -q Debian /etc/os-release && grep -q jessie /etc/os-release; then \
 # This only works for root. The circleci user is done near the end of this Dockerfile
 RUN echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
 
+RUN sudo dpkg --configure -a
+
 # man directory is missing in some base images
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
 RUN apt-get update \
