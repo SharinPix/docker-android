@@ -4,7 +4,7 @@ executors:
     environment:
       IMAGE_NAME: sharinpix/docker-android
     docker:
-      - image: cimg/base:2020.01
+      - image: circleci/buildpack-deps:stretch
 jobs:
   build:
     executor: docker-publisher

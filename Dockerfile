@@ -32,9 +32,9 @@ RUN echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
 RUN apt-get update \
   && mkdir -p /usr/share/man/man1 \
-  && apt-get install -y \
+  && apt-get install -f --fix-broken -y \
     git mercurial xvfb apt \
-    locales sudo openssh-client ca-certificates tar parallel gzip \
+    locales sudo openssh-client ca-certificates tar gzip parallel \
     net-tools netcat unzip zip bzip2 gnupg curl wget make
 
 
