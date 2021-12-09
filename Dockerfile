@@ -32,10 +32,10 @@ RUN dpkg --configure -a
 
 # man directory is missing in some base images
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
-RUN apt autoremove && apt-get update \
+RUN apt-get update \
   && mkdir -p /usr/share/man/man1 \
   && apt-get install -y \
-    git mercurial xvfb apt \
+    git xvfb apt \
     locales sudo openssh-client ca-certificates tar gzip parallel \
     net-tools netcat unzip zip bzip2 gnupg curl wget make
 
