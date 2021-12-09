@@ -33,8 +33,8 @@ RUN echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
 RUN apt-get update \
   && mkdir -p /usr/share/man/man1 \
   && apt-get install -y \
-    git xvfb apt \
-    locales sudo openssh-client ca-certificates tar gzip \
+    git mercurial xvfb apt \
+    locales sudo openssh-client ca-certificates tar gzip parallel \
     net-tools netcat unzip zip bzip2 gnupg curl wget make
 
 
@@ -64,10 +64,10 @@ RUN set -ex \
   && DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/${DOCKER_VERSION}" \
   && echo Docker URL: $DOCKER_URL \
   && curl --silent --show-error --location --fail --retry 3 --output /tmp/docker.tgz "${DOCKER_URL}" \
-  && sudo ls -lha /tmp/docker.tgz \
-  && sudo tar -xz -C /tmp -f /tmp/docker.tgz \
-  && sudo mv /tmp/docker/* /usr/bin \
-  && sudo rm -rf /tmp/docker /tmp/docker.tgz \
+  && ls -lha /tmp/docker.tgz \
+  && tar -xz -C /tmp -f /tmp/docker.tgz \
+  && mv /tmp/docker/* /usr/bin \
+  && rm -rf /tmp/docker /tmp/docker.tgz \
   && which docker \
   && (docker version || true)
 
