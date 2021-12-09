@@ -17,7 +17,8 @@ ENV HOME /home/node
 
 RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@10.0.0 @ionic/cli@6.1.0
 
-RUN bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
+RUN sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
+  bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
   bash -c "rbenv install 2.7.2" && \
   echo 'eval "$(rbenv init -)"' >> /home/user/.bashrc && \
   bash -c "rbenv global 2.7.2" && \
