@@ -103,6 +103,9 @@ ENV HOME /home/node
 
 # Install Google Cloud SDK
 
+RUN sudo apt-get install software-properties-common \
+    && sudo apt-add-repository universe
+
 RUN sudo apt-get update -qqy && sudo apt-get install -qqy \
         python-dev \
         python-pip \
