@@ -32,10 +32,17 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Publish Docker Image to Docker Hub
+          name: Publish Docker Image to Docker Hub (Circle Ci Build)
           command: |
-            IMAGE_TAG="0.0.${CIRCLE_PULL_REQUEST##*/}"
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG="circle-${CIRCLE_BUILD_NUM}"
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+            docker push $IMAGE_NAME:$IMAGE_TAG
+      - run:
+          name: Publish Docker Image to Docker Hub (Pull request)
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG="pr-${CIRCLE_PULL_REQUEST##*/}"
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:$IMAGE_TAG
   publish-latest:
