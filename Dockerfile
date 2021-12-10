@@ -42,4 +42,8 @@ RUN sudo apt-get update && \
   bash -c "rbenv global 2.7.2" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
 
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+
+RUN java -version && gradle -v && ruby -v && node -v
+
 WORKDIR /home/node
