@@ -42,8 +42,10 @@ RUN sudo apt-get update && \
   bash -c "rbenv global 2.7.2" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
 
+RUN sudo apt-get update && sudo apt-get install python3-pip
+
 ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 
-RUN java -version && gradle -v && ruby -v && node -v
+RUN java -version && gradle -v && ruby -v && node -v && pip -V
 
 WORKDIR /home/node
