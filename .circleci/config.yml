@@ -46,6 +46,7 @@ jobs:
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:$IMAGE_TAG
   publish-latest:
+    executor: docker-publisher
     steps:
       - setup_remote_docker
       - run:
