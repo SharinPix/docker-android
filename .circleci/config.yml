@@ -67,6 +67,9 @@ workflows:
       - publish:
           requires:
             - build
+          filters:
+            branches:
+              ignore: main
       - publish-latest:
           requires:
             - build
