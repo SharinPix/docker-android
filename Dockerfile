@@ -39,6 +39,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | b
   echo 'source $NVM_DIR/nvm.sh' >> $HOME/.bashrc
 RUN nvm install 16.17.0
 RUN nvm use 16.17.0
+RUN source $HOME/.bashrc
 
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
