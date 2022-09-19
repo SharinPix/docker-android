@@ -38,8 +38,7 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
     && source $HOME/.nvm/nvm.sh \
     && nvm install 16.17.0 \
     && nvm alias default 16.17.0 \
-    && nvm use default \
-    && node -v
+    && nvm use default
 
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
