@@ -38,7 +38,7 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
     && source $HOME/.nvm/nvm.sh \
     && nvm install 16.17.0 \
     && nvm alias default 16.17.0 \
-    && nvm use default
+    && nvm use default /
     && node -v
 
 RUN sudo apt-get update && \
