@@ -34,11 +34,11 @@ RUN sudo apt-get update -qq && \
 
 ENV PATH="/home/node/.rbenv/bin:/home/node/.rbenv/shims:$PATH"
 
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-    && source $HOME/.nvm/nvm.sh \
-    && nvm install 16.17.0 \
-    && nvm alias default 16.17.0 \
-    && nvm use default
+RUN bash -c "curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash" \
+    && bash -c "source $HOME/.nvm/nvm.sh" \
+    && bash -c "nvm install 16.17.0" \
+    && bash -c "nvm alias default 16.17.0" \
+    && bash -c "nvm use default"
 
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
