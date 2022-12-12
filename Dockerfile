@@ -45,12 +45,24 @@ RUN sudo apt-get update -qq && \
 
 ENV PATH="/home/node/.rbenv/bin:/home/node/.rbenv/shims:$PATH"
 
+ENV NVM_DIR="$HOME/.nvm"
+ENV NODE_VERSION="16.17.0"
+
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+    && source $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH="$NVM_DIR/v$NODE_VERSION/lib/node_modules"
+ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
+
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
   bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
-  bash -c "rbenv install 2.7.6" && \
+  bash -c "rbenv install 2.7.7" && \
   echo 'eval "$(rbenv init -)"' >> /home/node/.bashrc && \
-  bash -c "rbenv global 2.7.6" && \
+  bash -c "rbenv global 2.7.7" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
