@@ -8,13 +8,13 @@ ENV NDK_LTS_VERSION "21.4.7075529"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
-ENV BUILD_TOOLS_VERSION "30.0.3"
-RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
-
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
 ENV PATH "${ANDROID_NDK_HOME}:${PATH}"
 
 USER root
+
+ENV BUILD_TOOLS_VERSION "30.0.3"
+RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
