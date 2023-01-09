@@ -10,7 +10,7 @@ RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
 # Setup build tools
 ENV BUILD_TOOLS_VERSION "30.0.3"
-RUN echo y | sudo ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
+RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
 ENV PATH "${ANDROID_NDK_HOME}:${PATH}"
