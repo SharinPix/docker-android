@@ -1,4 +1,4 @@
-FROM cimg/android:2021.10.2-node
+FROM cimg/android:2022.12.1-node
 
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
