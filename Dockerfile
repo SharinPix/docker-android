@@ -1,4 +1,4 @@
-FROM cimg/android:2021.10.2-node
+FROM cimg/android:2022.12.1-node
 
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
@@ -7,6 +7,10 @@ RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 ENV NDK_LTS_VERSION "21.4.7075529"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
+
+# Setup build tools
+ENV BUILD_TOOLS_VERSION "30.0.3"
+RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
 ENV PATH "${ANDROID_NDK_HOME}:${PATH}"
