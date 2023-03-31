@@ -64,9 +64,9 @@ ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
   bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
-  bash -c "rbenv install 2.7.7" && \
+  bash -c "rbenv install 2.7.8" && \
   echo 'eval "$(rbenv init -)"' >> /home/node/.bashrc && \
-  bash -c "rbenv global 2.7.7" && \
+  bash -c "rbenv global 2.7.8" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
