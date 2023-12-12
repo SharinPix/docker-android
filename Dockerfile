@@ -30,7 +30,7 @@ CMD ["/bin/sh"]
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
 
-RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@11.0.0 @ionic/cli@6.18.1
+RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
 
 RUN sudo apt-get update -qq && \
   DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -qq --no-install-recommends \
