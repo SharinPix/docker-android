@@ -5,7 +5,7 @@ USER root
 # update image and install required packages
 RUN apt update && apt install -y default-jdk
 
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+ENV JAVA_HOME=$(dirname $( readlink -f $(which java) ))
 ENV JDK_HOME=${JAVA_HOME}
 ENV JRE_HOME=${JDK_HOME}
 
