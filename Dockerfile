@@ -27,6 +27,7 @@ RUN apt-get install -y wget unzip && \
     rm /tmp/commandlinetools-linux-9123335_latest.zip
 
 ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=${ANDROID_HOME}
 ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/bin
 
 # Install Android SDK
