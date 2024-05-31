@@ -22,18 +22,18 @@ ENV ANDROID_HOME=/opt/android-sdk
 
 # Install Android SDK Tools
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -P /tmp && \
-    mkdir ${ANDROID_HOME} && \
-    mkdir ${ANDROID_HOME}/cmdline-tools && \
-    mkdir ${ANDROID_HOME}/cmdline-tools/latest && \
-    mkdir ${ANDROID_HOME}/platforms && \
-    mkdir ${ANDROID_HOME}/ndk && \
-    unzip -d ${ANDROID_HOME}/cmdline-tools/latest /tmp/commandlinetools-linux-9123335_latest.zip && \
+    mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+    unzip -d ${ANDROID_HOME}/cmdline-tools/temp /tmp/commandlinetools-linux-9123335_latest.zip && \
     rm /tmp/commandlinetools-linux-9123335_latest.zip && \
-    ls -la ${ANDROID_HOME}/cmdline-tools/latest/bin/
+    ls -la ${ANDROID_HOME}/cmdline-tools/temp/ && \
+    mv ${ANDROID_HOME}/cmdline-tools/temp/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest && \
+    ls -la ${ANDROID_HOME}/cmdline-tools/latest/bin/ && \
+    rm -rf ${ANDROID_HOME}/cmdline-tools/temp
 
 # Set PATH to include the bin directory of the cmdline-tools
 ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin
 
 # Accept licenses and install SDK components
 RUN yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses && \
-    ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "extras;google;m2repository" "extras;android;m2repository"
+    ${ANDROID_HAND-WORK_DIR}/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "extras;google;m2repository" "extras;android;m2repository"
+
