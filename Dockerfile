@@ -18,15 +18,16 @@ RUN wget https://services.gradle.org/distributions/gradle-7.6-bin.zip -P /tmp &&
     ln -s /opt/gradle/gradle-7.6/bin/gradle /usr/bin/gradle && \
     rm /tmp/gradle-7.6-bin.zip
 
+ENV ANDROID_HOME=/opt/android-sdk
+ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/bin
+
 # Install Android SDK Tools
-RUN apt-get install -y wget unzip && \
-    wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -P /tmp && \
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -P /tmp && \
+    mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+	  mkdir ${ANDROID_HOME}/platforms && \
+	  mkdir ${ANDROID_HOME}/ndk && \
     unzip -d /opt/android-sdk /tmp/commandlinetools-linux-9123335_latest.zip && \
     rm /tmp/commandlinetools-linux-9123335_latest.zip
-
-ENV ANDROID_HOME=/opt/android-sdk
-ENV ANDROID_SDK_ROOT=${ANDROID_HOME}/cmdline-tools/bin/sdkmanager
-ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/bin
 
 # Install Android SDK
 RUN yes | sdkmanager --licenses && \
