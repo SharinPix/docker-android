@@ -22,11 +22,14 @@ ENV ANDROID_HOME=/opt/android-sdk
 
 # Install Android SDK Tools
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -P /tmp && \
-    mkdir -p ${ANDROID_HOME}/cmdline-tools/latest && \
+    mkdir ${ANDROID_HOME} && \
+    mkdir ${ANDROID_HOME}/cmdline-tools && \
+    mkdir ${ANDROID_HOME}/cmdline-tools/latest && \
     mkdir ${ANDROID_HOME}/platforms && \
     mkdir ${ANDROID_HOME}/ndk && \
     unzip -d ${ANDROID_HOME}/cmdline-tools/latest /tmp/commandlinetools-linux-9123335_latest.zip && \
-    rm /tmp/commandlinetools-linux-9123335_latest.zip
+    rm /tmp/commandlinetools-linux-9123335_latest.zip && \
+    ls -la ${ANDROID_HOME}/cmdline-tools/latest/bin/
 
 # Set PATH to include the bin directory of the cmdline-tools
 ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin
