@@ -9,6 +9,9 @@ ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 ENV JDK_HOME=${JAVA_HOME}
 ENV JRE_HOME=${JDK_HOME}
 
+#  Install wget and unzip
+RUN apt-get install -y wget unzip
+
 # Install Gradle 7.6
 RUN wget https://services.gradle.org/distributions/gradle-7.6-bin.zip -P /tmp && \
     unzip -d /opt/gradle /tmp/gradle-7.6-bin.zip && \
