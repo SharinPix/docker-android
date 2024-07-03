@@ -4,12 +4,12 @@ RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
 
 # Setup LTS release
-ENV NDK_LTS_VERSION "21.4.7075529"
+ENV NDK_LTS_VERSION "23.1.7779620"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
 # Setup build tools
-ENV BUILD_TOOLS_VERSION "30.0.3"
+ENV BUILD_TOOLS_VERSION "33.0.2"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
