@@ -1,4 +1,4 @@
-FROM cimg/android:2024.04.1-node
+FROM cimg/android:2024.07.1-node
 
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
@@ -30,10 +30,14 @@ CMD ["/bin/sh"]
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
 
-RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
+USER root
 
-RUN sudo apt-get update -qq && \
-  DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -qq --no-install-recommends \
+WORKDIR /home/node
+
+RUN npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
+
+RUN apt-get update -qq && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
     # for ruby-dev
     build-essential\
     git \
@@ -42,10 +46,10 @@ RUN sudo apt-get update -qq && \
     libssl-dev libreadline-dev zlib1g-dev \
     # for postgres
     libpq-dev \
-  && sudo apt-get clean \
-  && sudo rm -rf /var/cache/apt/archives/* \
-  && sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && sudo truncate -s 0 /var/log/*log
+  && apt-get clean \
+  && rm -rf /var/cache/apt/archives/* \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log
 
 ENV PATH="/home/node/.rbenv/bin:/home/node/.rbenv/shims:$PATH"
 
@@ -61,13 +65,15 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
 ENV NODE_PATH="$NVM_DIR/v$NODE_VERSION/lib/node_modules"
 ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
-RUN sudo apt-get update && \
-  sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
+RUN apt-get update && \
+  apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
   bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
   bash -c "rbenv install 3.1.4" && \
   echo 'eval "$(rbenv init -)"' >> /home/node/.bashrc && \
   bash -c "rbenv global 3.1.4" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
+
+USER node
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
