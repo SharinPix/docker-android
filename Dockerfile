@@ -75,6 +75,9 @@ RUN apt-get update && \
 
 USER node
 
+# 1000 is first non-root user id of any linux system
+RUN sudo chown -R 1000:1000 "/home/node/.npm" 
+
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
