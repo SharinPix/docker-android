@@ -27,6 +27,8 @@ ENV PATH /home/node/.local/bin:/home/node/bin:${PATH}
 
 CMD ["/bin/sh"]
 
+RUN sudo chown -R node:node /home/node
+
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
 
@@ -34,10 +36,10 @@ USER root
 
 WORKDIR /home/node
 
-RUN npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
+RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
 
-RUN apt-get update -qq && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+RUN sudo apt-get update -qq && \
+  DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -qq --no-install-recommends \
     # for ruby-dev
     build-essential\
     git \
@@ -46,10 +48,10 @@ RUN apt-get update -qq && \
     libssl-dev libreadline-dev zlib1g-dev \
     # for postgres
     libpq-dev \
-  && apt-get clean \
-  && rm -rf /var/cache/apt/archives/* \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && truncate -s 0 /var/log/*log
+  && sudo apt-get clean \
+  && sudo rm -rf /var/cache/apt/archives/* \
+  && sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && sudo truncate -s 0 /var/log/*log
 
 ENV PATH="/home/node/.rbenv/bin:/home/node/.rbenv/shims:$PATH"
 
@@ -65,18 +67,13 @@ RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
 ENV NODE_PATH="$NVM_DIR/v$NODE_VERSION/lib/node_modules"
 ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
-RUN apt-get update && \
-  apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
+RUN sudo apt-get update && \
+  sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
   bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
   bash -c "rbenv install 3.1.4" && \
   echo 'eval "$(rbenv init -)"' >> /home/node/.bashrc && \
   bash -c "rbenv global 3.1.4" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
-
-USER node
-
-# 1000 is first non-root user id of any linux system
-RUN sudo chown -R 1000:1000 "/home/node" 
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
