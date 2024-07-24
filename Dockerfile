@@ -23,11 +23,13 @@ RUN groupadd --gid 1000 node \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
 USER node
+ENV HOME /home/node
 ENV PATH /home/node/.local/bin:/home/node/bin:${PATH}
 
 CMD ["/bin/sh"]
 
 RUN sudo chown -R node:node /home/node
+RUN sudo chown -R node:node /home/circleci
 
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
