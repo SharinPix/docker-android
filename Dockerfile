@@ -32,10 +32,6 @@ RUN sudo chown -R node:node /home/node
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
 
-USER root
-
-WORKDIR /home/node
-
 RUN sudo npm install --unsafe-perm=true --allow-root -g cordova@12.0.0 @ionic/cli@6.20.3
 
 RUN sudo apt-get update -qq && \
