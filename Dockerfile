@@ -1,15 +1,15 @@
-FROM cimg/android:2022.12.1-node
+FROM cimg/android:2024.07.1-node
 
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
 
 # Setup LTS release
-ENV NDK_LTS_VERSION "23.1.7779620"
+ENV NDK_LTS_VERSION "25.1.8937393"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
 # Setup build tools
-ENV BUILD_TOOLS_VERSION "33.0.2"
+ENV BUILD_TOOLS_VERSION "34.0.0"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
@@ -23,9 +23,13 @@ RUN groupadd --gid 1000 node \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
 USER node
+ENV HOME /home/node
 ENV PATH /home/node/.local/bin:/home/node/bin:${PATH}
 
 CMD ["/bin/sh"]
+
+RUN sudo chown -R node:node /home/node
+RUN sudo chown -R node:node /home/circleci
 
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/node
@@ -74,7 +78,7 @@ RUN sudo apt-get update && \
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 
 RUN java -version && gradle -v && ruby -v && node -v && pip -V
 
