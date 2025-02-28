@@ -54,7 +54,7 @@ RUN sudo apt-get update -qq && \
 ENV PATH="/home/node/.rbenv/bin:/home/node/.rbenv/shims:$PATH"
 
 ENV NVM_DIR="$HOME/.nvm"
-ENV NODE_VERSION="16.17.0"
+ENV NODE_VERSION="20.15.0"
 
 RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
     && source $NVM_DIR/nvm.sh \
