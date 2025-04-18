@@ -9,7 +9,7 @@ ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
 # Setup build tools
-ENV BUILD_TOOLS_VERSION "34.0.0"
+ENV BUILD_TOOLS_VERSION "35.0.0"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "build-tools;${BUILD_TOOLS_VERSION}"
 
 ENV ANDROID_NDK_ROOT "${ANDROID_NDK_HOME}"
