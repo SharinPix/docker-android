@@ -4,7 +4,7 @@ RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
 
 # Setup LTS release
-ENV NDK_LTS_VERSION "27.0.12077973"
+ENV NDK_LTS_VERSION "29.0.13599879"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
@@ -75,7 +75,7 @@ RUN sudo apt-get update && \
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
-ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 
 RUN java -version && gradle -v && ruby -v && node -v && pip -V
 
