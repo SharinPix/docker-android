@@ -4,7 +4,7 @@ RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.6.4111459" && \
 	echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "cmake;3.10.2.4988404"
 
 # Setup LTS release
-ENV NDK_LTS_VERSION "27.0.12077973"
+ENV NDK_LTS_VERSION "29.0.13599879"
 ENV ANDROID_NDK_HOME "/home/circleci/android-sdk/ndk/${NDK_LTS_VERSION}"
 RUN echo y | ${CMDLINE_TOOLS_ROOT}/sdkmanager "ndk;${NDK_LTS_VERSION}"
 
@@ -68,14 +68,14 @@ ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 RUN sudo apt-get update && \
   sudo apt-get install git curl libssl-dev libreadline-dev bison zlib1g-dev autoconf build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && \
   bash -c "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash" && \
-  bash -c "rbenv install 3.3.5" && \
+  bash -c "rbenv install 3.4.7" && \
   echo 'eval "$(rbenv init -)"' >> /home/node/.bashrc && \
-  bash -c "rbenv global 3.3.5" && \
+  bash -c "rbenv global 3.4.7" && \
   bash -c "/home/node/.rbenv/shims/gem install bundler"
 
 RUN sudo apt-get update && sudo apt-get install python3-pip
 
-ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 
 RUN java -version && gradle -v && ruby -v && node -v && pip -V
 
