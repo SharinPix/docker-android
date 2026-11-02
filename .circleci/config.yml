@@ -1,78 +1,63 @@
 version: 2.1
+
 executors:
   docker-publisher:
     environment:
       IMAGE_NAME: sharinpix/docker-android
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: cimg/base:current
+        # Authenticated pull: avoids Docker Hub's anonymous pull rate limit.
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASS
+
 jobs:
-  build:
+  # Build, test and push in a single job: no `docker save` / workspace / `docker load`
+  # round trip of a multi-GB tarball between jobs.
+  build-and-publish:
     executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
       - run:
+          name: Log in to Docker Hub
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - run:
           name: Build Docker image
+          command: docker build --pull -t "$IMAGE_NAME:ci" .
+      - run:
+          name: Smoke test
           command: |
-            docker build -t $IMAGE_NAME:latest .
+            docker run --rm "$IMAGE_NAME:ci" bash -c '
+              set -ex
+              test "$(id -u):$(id -g)" = "1000:1000"
+              test -w "$ANDROID_HOME"
+              java -version
+              gradle -v
+              node -v
+              ruby -v
+              cordova -v < /dev/null
+              ionic -v
+              sdkmanager --list_installed
+            '
       - run:
-          name: Archive Docker image
-          command: docker save -o image.tar $IMAGE_NAME
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image.tar
-  publish:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Publish Docker Image to Docker Hub (Circle Ci Build)
+          name: Tag and push
           command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="circle-${CIRCLE_BUILD_NUM}"
-            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:$IMAGE_TAG
-      - run:
-          name: Publish Docker Image to Docker Hub (Pull request)
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="pr-${CIRCLE_PULL_REQUEST##*/}"
-            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:$IMAGE_TAG
-  publish-latest:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME:latest
+            TAGS="sha-${CIRCLE_SHA1:0:7}"
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              TAGS="$TAGS latest"
+            else
+              TAGS="$TAGS circle-${CIRCLE_BUILD_NUM}"
+              if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+                TAGS="$TAGS pr-${CIRCLE_PULL_REQUEST##*/}"
+              fi
+            fi
+            for TAG in $TAGS; do
+              docker tag "$IMAGE_NAME:ci" "$IMAGE_NAME:$TAG"
+              docker push "$IMAGE_NAME:$TAG"
+            done
+
 workflows:
-  version: 2
   build-and-publish:
     jobs:
-      - build
-      - publish:
-          requires:
-            - build
-          filters:
-            branches:
-              ignore: main
-      - publish-latest:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
+      - build-and-publish
