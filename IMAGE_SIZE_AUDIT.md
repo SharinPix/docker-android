@@ -30,12 +30,14 @@ JDK 8 + 17 + 21 + system ruby (530 MB), platforms 29→35 (403 MB), gcloud SDK (
 
 ## Changes in this branch
 
-1. **Remove the `chown -R /home/circleci` layer (−~2.7 GB, −37%)** — the base `circleci` user
-   (uid/gid 3434) is renamed to `node` instead of creating a new uid 1000 user. Since ownership is stored
-   by numeric uid, `node` owns the SDK without any file being rewritten, so Gradle/sdkmanager can still
-   write into the SDK.
-   **Behaviour change:** the `node` user is now **uid 3434** instead of 1000. This only matters if
-   something bind-mounts host directories expecting uid 1000.
+1. **Remove the `chown -R /home/circleci` layer (−~2.7 GB, −37%)** — `node` keeps **uid/gid 1000**
+   (needed for bind-mounted folders) but the SDK is no longer re-owned. The SDK files are world-readable,
+   and `node` is added to the `circleci` group so it can traverse `/home/circleci`.
+   **Trade-off:** the Android SDK is now **read-only for `node`**. Every SDK package a build needs must be
+   preinstalled in the Dockerfile; AGP can no longer auto-download a missing platform/build-tools/NDK
+   (it fails with "SDK directory is not writable"). Workaround at build time: `sudo sdkmanager "<pkg>"`.
+   If a writable SDK with uid 1000 is required, use a multi-stage build that
+   `COPY --from=... --chown=1000:1000` the SDK onto a slimmer base (see "Further options").
 2. Merge the three `apt-get install` layers into one and clean apt lists in the same layer.
 3. Clear nvm's download cache and npm caches.
 4. Build Ruby with `--disable-install-doc` and install gems with `--no-document`.
@@ -50,7 +52,7 @@ Expected result: roughly **4.4 GB compressed** (from 7.19 GB). Must be confirmed
 | Drop `cmake;3.6` / `cmake;3.10` | ~28 MB | Check no plugin pins these. |
 | Drop `build-tools;35.0.0` and use base `35.0.1` | ~62 MB | cordova-android 13/14 asks for 35.0.0 exactly; AGP would download it at build time. |
 | Drop nvm and use base's Node (or install 22.19 into `/usr/local` with a tarball) | ~90 MB | Base Node version is whatever was LTS in 2025-03. |
-| Rebuild from `cimg/base` / `ubuntu:22.04` with only: cmdline-tools, platform-tools, one platform, one build-tools, JDK 21, Gradle, Node, Ruby | **~2.5–3 GB** | More Dockerfile to maintain; removes JDK 8/17, gcloud, docker CLI, m2 extras, fastlane, firebase, platforms 29–34. Biggest possible win. |
+| Rebuild from `cimg/base` / `ubuntu:22.04` (multi-stage, `COPY --chown=1000:1000` the SDK from `cimg/android`, so it is writable by uid 1000 and stored once) with only: cmdline-tools, platform-tools, one platform, one build-tools, JDK 21, Gradle, Node, Ruby | **~2.5–3 GB** | More Dockerfile to maintain; removes JDK 8/17, gcloud, docker CLI, m2 extras, fastlane, firebase, platforms 29–34. Biggest possible win. |
 
 ## CI notes
 

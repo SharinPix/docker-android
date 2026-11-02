@@ -17,18 +17,15 @@ ENV PATH "${ANDROID_NDK_HOME}:${PATH}"
 
 USER root
 
-# Rename the base image's `circleci` user (uid/gid 3434) to `node` instead of
-# creating a new uid 1000 user and running `chown -R` on /home/circleci.
-# Ownership is stored by numeric uid, so the Android SDK (owned by 3434) is
-# immediately owned by `node` without touching any file. The previous
-# `chown -R node:node /home/circleci` rewrote every file of the SDK/NDK into a
-# new layer and added ~2.7 GB (compressed) to the image.
-RUN usermod -l node circleci \
-  && groupmod -n node circleci \
-  && usermod -d /home/node node \
-  && mkdir -p /home/node \
-  && cp -rT /etc/skel /home/node \
-  && chown -R node:node /home/node \
+# `node` keeps uid/gid 1000 (host folders are bind-mounted with that uid).
+# We deliberately do NOT `chown -R node:node /home/circleci`: changing ownership
+# rewrites every file of the Android SDK/NDK into a new layer (~2.7 GB
+# compressed). The SDK files are world-readable, and `node` is added to the
+# `circleci` group so it can traverse /home/circleci even if it is mode 750.
+# The SDK is therefore read-only for `node`: every SDK package the builds need
+# must be installed above (or with `sudo sdkmanager ...` at build time).
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --groups circleci --shell /bin/bash --create-home node \
   && echo 'node ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
