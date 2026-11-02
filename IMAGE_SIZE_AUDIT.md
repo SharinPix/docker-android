@@ -48,9 +48,9 @@ Expected result: roughly **4.4 GB compressed** (from 7.19 GB). Must be confirmed
 
 | Option | Est. saving | Trade-off |
 |---|---:|---|
-| Drop the NDK if no Cordova plugin compiles native code (or let AGP fetch it on demand) | ~790 MB | Builds that need it download it at runtime. |
+| Drop the NDK if no Cordova plugin compiles native code | ~790 MB | SDK is read-only for `node`, so a build needing it must run `sudo sdkmanager "ndk;…"`. |
 | Drop `cmake;3.6` / `cmake;3.10` | ~28 MB | Check no plugin pins these. |
-| Drop `build-tools;35.0.0` and use base `35.0.1` | ~62 MB | cordova-android 13/14 asks for 35.0.0 exactly; AGP would download it at build time. |
+| Drop `build-tools;35.0.0` and use base `35.0.1` | ~62 MB | cordova-android 13/14 asks for 35.0.0 exactly; SDK is read-only, so AGP cannot download it at build time. |
 | Drop nvm and use base's Node (or install 22.19 into `/usr/local` with a tarball) | ~90 MB | Base Node version is whatever was LTS in 2025-03. |
 | Rebuild from `cimg/base` / `ubuntu:22.04` (multi-stage, `COPY --chown=1000:1000` the SDK from `cimg/android`, so it is writable by uid 1000 and stored once) with only: cmdline-tools, platform-tools, one platform, one build-tools, JDK 21, Gradle, Node, Ruby | **~2.5–3 GB** | More Dockerfile to maintain; removes JDK 8/17, gcloud, docker CLI, m2 extras, fastlane, firebase, platforms 29–34. Biggest possible win. |
 
