@@ -71,6 +71,13 @@ JDK + apt ~120 MB, Node + cordova ~130 MB, Ruby ~90 MB.
 
 ## CI notes
 
-- `docker save` → `persist_to_workspace` → `docker load` moves the full multi-GB tar between jobs; the
-  size reduction speeds this up directly. Building and pushing in the same job would avoid it entirely.
-- The executor image `circleci/buildpack-deps:stretch` is deprecated (Debian 9, EOL); `cimg/base:current` is the replacement.
+The CircleCI config was reworked in this branch:
+
+- Build, smoke test and push now run in **one job**. Before, the `build` job ran `docker save` on the 7 GB
+  image, uploaded it to the workspace, and the publish job downloaded it and ran `docker load`.
+- The executor image is `cimg/base:current`. Before, it was `circleci/buildpack-deps:stretch`, which is deprecated and on Debian 9 (end of life).
+- The executor pull and the build both log in to Docker Hub, so they are not hit by the anonymous pull rate limit.
+- **Smoke test:** the job checks that the user is uid/gid 1000, that the SDK is writable, and that java, gradle, node, ruby, cordova, ionic and sdkmanager all run.
+- **Tags:**
+  - `main` pushes `latest` plus an immutable `sha-<commit>` tag.
+  - Other branches push `circle-<build>`, `sha-<commit>`, and `pr-<n>` only when a PR exists. Before, a branch without a PR pushed a meaningless `pr-` tag.
